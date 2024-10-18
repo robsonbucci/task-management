@@ -1,3 +1,5 @@
-export default function Input(props: any) {
-  return <input className="py-3 px-8 rounded-[6px] border-0 text-black" {...props} />;
+import { Input as AntdInput, InputProps as AntdInputProps } from "antd";
+
+export default function Input(props: AntdInputProps) {
+  return <AntdInput {...props} size="large"/>;
 }
