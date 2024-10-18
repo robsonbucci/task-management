@@ -33,7 +33,7 @@ export default function RootLayout({
       >
         <ContextProvider>
           <GlobalStyleProviders>
-            <Sidebar />
+            {/* <Sidebar /> */}
             {children}
           </GlobalStyleProviders>
         </ContextProvider>

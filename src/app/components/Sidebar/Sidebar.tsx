@@ -15,7 +15,17 @@ export default function Sidebar() {
         borderRadius: "1rem"
       }}
     >
-      sidebar
+      <div className="profile">
+        <div className="profile-overlay">
+          <img
+            src="https://cdn3.iconfinder.com/data/icons/essential-rounded/64/Rounded-31-512.png"
+            alt="profile"
+            width={70} 
+            height={70}
+          />
+          <h1><span>Profile</span></h1>
+        </div>
+      </div>
     </nav>
   );
 }
