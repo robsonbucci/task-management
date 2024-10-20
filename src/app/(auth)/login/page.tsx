@@ -4,8 +4,11 @@ import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 import Link from "next/link";
 
 import LoginCard from "@/app/components/LoginCard/LoginCard";
+import { useGlobalState } from "@/app/context/globalContextProvider";
 
 export default function Login() {
+  const { theme } = useGlobalState();
+
   const onFinish = (values: any) => {
     console.log("Success:", values);
   };
@@ -29,7 +32,7 @@ export default function Login() {
         <Form.Item
           name="email"
           rules={[
-            { required: true, message: "Por favor insira seu e-mail!" },
+            { required: true, message: "Insira seu e-mail!" },
             { type: "email", message: "O formato do e-mail é inválido!" }, // Validação de formato de e-mail
           ]}
         >
@@ -39,7 +42,7 @@ export default function Login() {
         {/* Campo para Senha */}
         <Form.Item
           name="password"
-          rules={[{ required: true, message: "Por favor insira sua senha!" }]}
+          rules={[{ required: true, message: "Insira sua senha!" }]}
         >
           <Input.Password prefix={<LockOutlined />} placeholder="Sua senha" />
         </Form.Item>
@@ -51,8 +54,8 @@ export default function Login() {
           </Button>
         </Form.Item>
 
-        {/* Link para Login */}
-        <Form.Item className="text-white">
+        {/* Link para cadastro */}
+        <Form.Item style={{ color: theme.colorFontPrimary }}>
           <Link href="/cadastro">Ainda não possui uma conta?</Link>
         </Form.Item>
       </Form>
