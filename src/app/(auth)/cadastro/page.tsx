@@ -7,10 +7,8 @@ import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 
 import LoginCard from "@/app/components/LoginCard/LoginCard";
-import { useGlobalState } from "@/app/context/globalContextProvider";
 
 export default function Cadastro() {
-  const { theme } = useGlobalState();
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -29,12 +27,8 @@ export default function Cadastro() {
       }
 
       const data = await response.json();
-      if (data.status !== 201) {
-        setError(data.message);
-        return;
-      }
 
-      setCookie("authorization", data.token);
+      setCookie("authorization", data);
       router.push("/");
     } catch (error) {
       setError("Erro ao realizar o cadastro. Tente novamente!");
@@ -121,7 +115,7 @@ export default function Cadastro() {
         {error && <p className="text-red-500">{error}</p>}
 
         {/* Link para Login */}
-        <Form.Item style={{ color: theme.colorFontPrimary }}>
+        <Form.Item style={{ color: "#e5e7eb" }}>
           <Link href="/login">Já possui conta?</Link>
         </Form.Item>
       </Form>

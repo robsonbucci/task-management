@@ -23,7 +23,7 @@ function verifyToken(token: string) {
   try {
     return jwt.verify(token, SECRET);
   } catch (error) {
-    throw errorHandler(401, "Token inválido");
+    return false;
   }
 }
 
@@ -56,7 +56,7 @@ export async function cadastroUser(userData: User) {
   });
 
   const token = createToken(userData);
-  return {status: 201, token};
+  return token;
 }
 
 export async function loginUser(
@@ -82,5 +82,5 @@ export async function loginUser(
   }
 
   const token = createToken(user);
-  return {status: 200, token};
+  return token;
 }

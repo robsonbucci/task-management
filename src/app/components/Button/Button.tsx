@@ -7,7 +7,6 @@ interface ButtonProps extends AntdButtonProps {
 }
 
 export default function Button({ children, ...props }: ButtonProps) {
-  const { theme } = useGlobalState();
 
   return (
     <AntdButton

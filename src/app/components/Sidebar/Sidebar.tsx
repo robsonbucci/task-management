@@ -1,31 +1,45 @@
 "use client";
-import { useGlobalState } from "@/app/context/globalContextProvider";
-import React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { GetProp, Menu, MenuProps } from "antd";
+import {
+  CalendarOutlined,
+  MailOutlined,
+  CheckOutlined,
+} from "@ant-design/icons";
 
-export default function Sidebar() {
-  const { theme } = useGlobalState();
+type MenuItem = GetProp<MenuProps, "items">[number];
 
+const items: MenuItem[] = [
+  {
+    key: "1",
+    icon: <MailOutlined />,
+    label: <Link href="/">Tarefas</Link>,
+  },
+  {
+    key: "2",
+    icon: <CalendarOutlined />,
+    label: "Concluídos",
+  },
+];
+
+export default function Sidebar({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
+  const hideSidebar = pathname === "/login" || pathname === "/cadastro";
   return (
-    <nav
-      className="relative"
-      style={{
-        width: theme.sidebarWidth,
-        backgroundColor: theme.colorBg2,
-        border: `2px solid ${theme.boderColor2}`,
-        borderRadius: "1rem"
-      }}
-    >
-      <div className="profile">
-        <div className="profile-overlay">
-          <img
-            src="https://cdn3.iconfinder.com/data/icons/essential-rounded/64/Rounded-31-512.png"
-            alt="profile"
-            width={70} 
-            height={70}
-          />
-          <h1><span>Profile</span></h1>
-        </div>
-      </div>
-    </nav>
+    <div className="flex h-screen">
+      {/* Renderiza o Menu apenas se não estiver nas rotas /login ou /cadastro */}
+      {!hideSidebar && (
+        <Menu
+          style={{ width: 256, height: "100vh" }}
+          defaultSelectedKeys={["1"]}
+          mode="vertical"
+          theme="dark"
+          items={items}
+        />
+      )}
+      <div style={{ padding: "20px", flex: 1 }}>{children}</div>
+    </div>
   );
 }
