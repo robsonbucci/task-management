@@ -2,19 +2,47 @@
 import { Button, Checkbox, Form, Input } from "antd";
 import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 import Link from "next/link";
+import { useState } from "react";
+import { setCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 
 import LoginCard from "@/app/components/LoginCard/LoginCard";
 import { useGlobalState } from "@/app/context/globalContextProvider";
 
 export default function Login() {
   const { theme } = useGlobalState();
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
+  const onFinish = async (values: any) => {
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      const data = await response.json();
+      if (data.status !== 200) {
+        setError(data.message);
+        return;
+      }
+
+      setCookie("authorization", data.token);
+      router.push("/");
+    } catch (error) {
+      setError("Erro ao realizar o login. Tente novamente");
+    }
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+    setError("Erro ao realizar o login. Tente novamente");
   };
 
   return (
@@ -33,7 +61,7 @@ export default function Login() {
           name="email"
           rules={[
             { required: true, message: "Insira seu e-mail!" },
-            { type: "email", message: "O formato do e-mail é inválido!" }, // Validação de formato de e-mail
+            { type: "email", message: "O formato do e-mail é inválido!" },
           ]}
         >
           <Input prefix={<MailOutlined />} placeholder="Seu e-mail" />
@@ -53,6 +81,8 @@ export default function Login() {
             Entrar
           </Button>
         </Form.Item>
+
+        {error && <p className="text-red-500">{error}</p>}
 
         {/* Link para cadastro */}
         <Form.Item style={{ color: theme.colorFontPrimary }}>

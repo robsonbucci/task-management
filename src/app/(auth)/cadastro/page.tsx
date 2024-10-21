@@ -3,6 +3,8 @@ import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import { useState } from "react";
 import Link from "next/link";
+import { setCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 
 import LoginCard from "@/app/components/LoginCard/LoginCard";
 import { useGlobalState } from "@/app/context/globalContextProvider";
@@ -10,6 +12,7 @@ import { useGlobalState } from "@/app/context/globalContextProvider";
 export default function Cadastro() {
   const { theme } = useGlobalState();
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const onFinish = async (values: any) => {
     try {
@@ -26,15 +29,18 @@ export default function Cadastro() {
       }
 
       const data = await response.json();
-      if(data.status !== 201){
+      if (data.status !== 201) {
         setError(data.message);
+        return;
       }
-      
+
+      setCookie("authorization", data.token);
+      router.push("/");
     } catch (error) {
-      setError((error as Error).message);
+      setError("Erro ao realizar o cadastro. Tente novamente!");
     }
   };
-  
+
   const onFinishFailed = (errorInfo: any) => {
     setError("Erro ao realizar o cadastro. Tente novamente!");
   };
@@ -54,10 +60,7 @@ export default function Cadastro() {
           name="name"
           rules={[{ required: true, message: "Insira seu nome!" }]}
         >
-          <Input
-            prefix={<UserOutlined />}
-            placeholder="Seu nome"
-          />
+          <Input prefix={<UserOutlined />} placeholder="Seu nome" />
         </Form.Item>
 
         {/* Campo para E-mail */}
@@ -68,10 +71,7 @@ export default function Cadastro() {
             { type: "email", message: "O formato do e-mail é inválido!" },
           ]}
         >
-          <Input
-            prefix={<MailOutlined />}
-            placeholder="Seu e-mail"
-          />
+          <Input prefix={<MailOutlined />} placeholder="Seu e-mail" />
         </Form.Item>
 
         {/* Campo para Senha */}
@@ -79,10 +79,7 @@ export default function Cadastro() {
           name="password"
           rules={[{ required: true, message: "Insira sua senha!" }]}
         >
-          <Input.Password
-            prefix={<LockOutlined />}
-            placeholder="Sua senha"
-          />
+          <Input.Password prefix={<LockOutlined />} placeholder="Sua senha" />
         </Form.Item>
 
         {/* Campo para Confirmar Senha */}
